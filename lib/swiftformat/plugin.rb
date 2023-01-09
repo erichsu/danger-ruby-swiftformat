@@ -60,7 +60,7 @@ module Danger
       message = "### SwiftFormat found issues:\n\n"
       message << "| File | Rules |\n"
       message << "| ---- | ----- |\n"
-      results[:errors].each do |error|
+      results[:errors].uniq.each do |error|
         message << "| #{error[:file].gsub("#{Dir.pwd}/", '')} | #{error[:rules].join(', ')} |\n"
       end
 

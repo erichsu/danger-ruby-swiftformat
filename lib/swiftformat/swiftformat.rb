@@ -11,7 +11,7 @@ module Danger
     end
 
     def check_format(files, additional_args = "", swiftversion = "")
-      cmd = [@path] + files
+      cmd = @path.split + files
       cmd << additional_args.split unless additional_args.nil? || additional_args.empty?
 
       unless swiftversion.nil? || swiftversion.empty?
