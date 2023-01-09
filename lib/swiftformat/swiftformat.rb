@@ -1,3 +1,5 @@
+require 'diff/lcs'
+require 'diff/lcs/string'
 require "logger"
 
 module Danger
@@ -55,7 +57,7 @@ module Danger
         next if match.count < 2
 
         errors << {
-            file: match[0].sub("#{Dir.pwd}/", ""),
+            file: match[0].sub("#{match[0].lcs(Dir.pwd).join}/", ""),
             rules: match[1].split(",").map(&:strip)
         }
       end
