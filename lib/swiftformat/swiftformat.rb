@@ -9,7 +9,7 @@ module Danger
     end
 
     def installed?
-      Cmd.run([@path, "--version"])
+      Cmd.run(%w(swift package plugin --list))[0].include?("‘swiftformat’")
     end
 
     def check_format(files, additional_args = "", swiftversion = "")
