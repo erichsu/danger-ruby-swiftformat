@@ -1,11 +1,10 @@
-require 'diff/lcs'
-require 'diff/lcs/string'
 require "logger"
 
 module Danger
   class SwiftFormat
-    def initialize(path = nil)
+    def initialize(path = nil, project_root)
       @path = path || "swiftformat"
+      @project_root = project_root
     end
 
     def installed?
@@ -57,7 +56,7 @@ module Danger
         next if match.count < 2
 
         errors << {
-            file: match[0].sub("#{match[0].lcs(Dir.pwd).join}/", ""),
+            file: match[0].sub(@project_root, ""),
             rules: match[1].split(",").map(&:strip)
         }
       end

@@ -9,6 +9,12 @@ module Danger
   # @tags swiftformat
   #
   class DangerSwiftformat < Plugin
+    # The project root, which will be used to make the paths relative.
+    # Defaults to `pwd`.
+    # @param    [String] value
+    # @return   [String]
+    attr_accessor :project_root
+
     # The path to SwiftFormat's executable
     #
     # @return [String]
@@ -58,10 +64,11 @@ module Danger
 
       # Process the errors
       message = "### SwiftFormat found issues:\n\n"
+      message << "root: #{project_root}/\n"
       message << "| File | Rules |\n"
       message << "| ---- | ----- |\n"
       results[:errors].uniq.each do |error|
-        message << "| #{error[:file].gsub("#{Dir.pwd}/", '')} | #{error[:rules].join(', ')} |\n"
+        message << "| #{error[:file].gsub(project_root, '')} | #{error[:rules].join(', ')} |\n"
       end
 
       unless additional_message.nil?
@@ -73,6 +80,13 @@ module Danger
       if fail_on_error
         fail "SwiftFormat found issues"
       end
+    end
+
+    # rubocop:disable Lint/DuplicateMethods
+    def project_root
+      root = @project_root || Dir.pwd
+      root += '/' unless root.end_with? '/'
+      root
     end
 
     # Find the files on which SwiftFormat should be run
@@ -99,7 +113,7 @@ module Danger
     #
     # @return [SwiftFormat]
     def swiftformat
-      SwiftFormat.new(binary_path)
+      SwiftFormat.new(binary_path, project_root)
     end
   end
 end
